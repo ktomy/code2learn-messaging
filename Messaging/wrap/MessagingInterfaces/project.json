@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0-*",
+  "frameworks": {
+    "net45": {
+      "wrappedProject": "../../MessagingInterfaces/MessagingInterfaces.csproj",
+      "bin": {
+        "assembly": "../../MessagingInterfaces/obj/{configuration}/MessagingInterfaces.dll",
+        "pdb": "../../MessagingInterfaces/obj/{configuration}/MessagingInterfaces.pdb"
+      }
+    }
+  }
+}

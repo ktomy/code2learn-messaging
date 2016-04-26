@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Net;
+using System.Net.Http;
 using Microsoft.AspNet.Mvc;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,22 +11,32 @@ namespace MessagingService.Controllers
     {
         // GET: api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public HttpResponseMessage Get()
         {
-            return new string[] { "value1", "value2" };
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+
+        //[HttpGet("{username}")]
+        //public string Get(string username)
+        //{
+        //    var x = new List<Contact>()
+        //    {
+                
+        //    };
+
+        //        return new JsonResult();
+
+
+
+        //}
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post([FromBody]string myUsername, [FromBody] string hisUsername)
         {
+          
         }
 
         // PUT api/values/5

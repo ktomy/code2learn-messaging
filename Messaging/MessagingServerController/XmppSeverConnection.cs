@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
@@ -12,7 +13,7 @@ using Matrix.Xmpp.Roster;
 using Matrix.Xmpp.Sasl;
 using Matrix.Xmpp.Session;
 using Matrix.Xmpp.Stream;
-using MessagingServerController.Model;
+using MessagingInterfaces.Model;
 using SQLite;
 using Error = Matrix.Xmpp.Client.Error;
 using ErrorCondition = Matrix.Xmpp.Base.ErrorCondition;
@@ -289,27 +290,45 @@ namespace MessagingServerController
                 // database or some kind of directory (LDAP, AD etc...)
                 iq.SwitchDirection();
                 iq.Type = IqType.Result;
-                for (var i = 1; i < 11; i++)
-                {
-                    // don't add yourself to the contact list (aka roster)
-                    if (Jid.User.EndsWith(i.ToString()))
-                        continue;
+                //for (var i = 1; i < 11; i++)
+                //{
+                //    // don't add yourself to the contact list (aka roster)
+                //    if (Jid.User.EndsWith(i.ToString()))
+                //        continue;
 
-                    var ri = new RosterItem
+                //    var ri = new RosterItem
+                //    {
+                //        Jid = new Jid("user" + i + "@" + XmppDomain),
+                //        Name = "User " + i,
+                //        Subscription = Subscription.Both
+                //    };
+                //    ri.AddGroup("Group 1");
+                //    iq.Query.Add(ri);
+                //}
+
+                var contacts = GetContacts(Jid.User);
+                foreach (var contact in contacts)
+                {
+                    iq.Query.Add(new RosterItem
                     {
-                        Jid = new Jid("user" + i + "@" + XmppDomain),
-                        Name = "User " + i,
-                        Subscription = Subscription.Both
-                    };
-                    ri.AddGroup("Group 1");
-                    iq.Query.Add(ri);
+                        Jid = contact.Username + "@ceva",
+                        Name = contact.Username,
+                        Subscription = Subscription.Both,
+                    });
                 }
+
+
                 Send(iq);
             }
             else if (iq.Type == IqType.Set)
             {
                 // TODO, handle roster add, remove and update here.
             }
+        }
+
+        private IEnumerable<Contact> GetContacts(string user)
+        {
+            return new List<Contact>();
         }
 
         private void ProcessSaslPlainAuth(MxAuth auth)
