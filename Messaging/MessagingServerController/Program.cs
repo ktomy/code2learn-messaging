@@ -16,16 +16,17 @@ namespace MessagingServerController
         [STAThread]
         static void Main()
         {
-            var gigi = new ContactRepository();
-            var contacte = new List<Contact>();
-            contacte.Add(new Contact()
-            {
-                ContactName = "asdasd",
-                CreatedOn = DateTime.Now
-            }
-                );
+            //var gigi = new ContactRepository();
+            //var contacte = new List<Contact>();
+            //contacte.Add(new Contact()
+            //{
+            //    ContactName = "asdasd",
+            //    CreatedOn = DateTime.Now
+            //}
+            //    );
 
-            gigi.SaveContacts(contacte);
+            //gigi.SaveContacts(contacte);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());

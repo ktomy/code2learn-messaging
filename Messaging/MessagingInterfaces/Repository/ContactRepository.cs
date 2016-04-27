@@ -17,7 +17,7 @@ namespace MessagingInterfaces.Repository
         }
         public IEnumerable<Contact> GetContacts(string user)
         {
-            return _context.Contacts;
+            return _context.Contacts.Where(x => x.Username == user).ToList();
         }
 
         public void SaveContacts(IEnumerable<Contact> contacts)
