@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D80B4700-97FD-49B5-8FD4-07ABC4E9FCF7}"
 EndProject
@@ -21,6 +21,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{3BA57693-5E45-4F1E-9488-AD7C14E84D06}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingInterfaces", "MessagingInterfaces\MessagingInterfaces.csproj", "{74352F8F-A594-421D-AD5F-F54D5011E6D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExternalDataProvider", "ExternalDataProvider\ExternalDataProvider.csproj", "{A83FD925-280C-4D91-8687-EC3670DBC525}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +56,14 @@ Global
 		{74352F8F-A594-421D-AD5F-F54D5011E6D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{74352F8F-A594-421D-AD5F-F54D5011E6D8}.Release|x64.ActiveCfg = Release|x64
 		{74352F8F-A594-421D-AD5F-F54D5011E6D8}.Release|x64.Build.0 = Release|x64
+		{A83FD925-280C-4D91-8687-EC3670DBC525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A83FD925-280C-4D91-8687-EC3670DBC525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A83FD925-280C-4D91-8687-EC3670DBC525}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A83FD925-280C-4D91-8687-EC3670DBC525}.Debug|x64.Build.0 = Debug|Any CPU
+		{A83FD925-280C-4D91-8687-EC3670DBC525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A83FD925-280C-4D91-8687-EC3670DBC525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A83FD925-280C-4D91-8687-EC3670DBC525}.Release|x64.ActiveCfg = Release|Any CPU
+		{A83FD925-280C-4D91-8687-EC3670DBC525}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,5 +74,6 @@ Global
 		{3D8D6C1E-D754-4EDB-90F8-A95141E74CB6} = {D80B4700-97FD-49B5-8FD4-07ABC4E9FCF7}
 		{C5013619-CF79-4237-9BC0-C743BE909353} = {D80B4700-97FD-49B5-8FD4-07ABC4E9FCF7}
 		{74352F8F-A594-421D-AD5F-F54D5011E6D8} = {3BA57693-5E45-4F1E-9488-AD7C14E84D06}
+		{A83FD925-280C-4D91-8687-EC3670DBC525} = {3BA57693-5E45-4F1E-9488-AD7C14E84D06}
 	EndGlobalSection
 EndGlobal
