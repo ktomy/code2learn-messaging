@@ -22,7 +22,8 @@ namespace MessagingAPI.Controllers
         [HttpPost]
         public void Post([FromBody]Contact contact)
         {
-            
+
+            contact.CreatedOn = DateTime.Now;
             _repository.SaveContacts(new List<Contact>() {contact});
         }
     }

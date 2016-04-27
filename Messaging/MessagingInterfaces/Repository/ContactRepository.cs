@@ -10,35 +10,22 @@ namespace MessagingInterfaces.Repository
 {
     public class ContactRepository
     {
+        readonly BaseContext _context;
         public ContactRepository()
         {
-            InitializeDatabase();
+            _context = new BaseContext();
         }
         public IEnumerable<Contact> GetContacts(string user)
         {
-            //using (var db = new SQLiteConnection(@"c:\temp\contacts.db"))
-            //{
-            //    var contacts = db.Table<Contact>().Where(x => x.Username == user).ToList();
-            //    return contacts;
-            //}
-            return null;
+            return _context.Contacts.Where(x => x.Username == user).ToList();
         }
 
         public void SaveContacts(IEnumerable<Contact> contacts)
         {
-            //using (var db = new SQLiteConnection(@"c:\temp\contacts.db"))
-            //{
-            //    foreach (var contact in contacts)
-            //        db.InsertOrReplace(contact);
-            //}
+            foreach (var contact in contacts)
+                _context.Contacts.Add(contact);
+            _context.SaveChanges();
         }
-
-        private void InitializeDatabase()
-        {
-            //using (var db = new SQLiteConnection(@"c:\temp\contacts.db"))
-            //{
-            //    db.CreateTable<Contact>();
-            //}
-        }
+        
     }
 }
