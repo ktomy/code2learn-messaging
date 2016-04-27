@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html ng-app="signIn">
+<head>
+    <title>Login</title>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/png" href="/content/image/favico.png" />
+    <link href="/content/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/content/css/signin.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+
+        <form class="form-signin" ng-submit="submit()" ng-controller="loginController">
+            <h3 class="logo-name">M<font color="#FAC632">Sys</font></h3>
+
+            <h2 class="second-name"> messenger</h2>
+            <div ng-show="loginFailedMessage" class="alert alert-danger">
+                <strong style="text-align: center">Login failed!</strong> <br />Username or password is incorrect.
+            </div>
+            <input type="text" class="form-control" placeholder="Username" data-ng-model="loginData.userName" required autofocus>
+            <input type="password" class="form-control" placeholder="Password" data-ng-model="loginData.password" required>
+            <br />
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+
+    </div>
+
+    <script src="/content/js/jquery.min.js"></script>
+    <script src="/content/js/bootstrap.min.js"></script>
+    <script src="/content/js/angular.min.js"></script>
+    <script src="/App/services/authService.js?v=2"></script>
+</body>
+</html>
