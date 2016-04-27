@@ -12,6 +12,8 @@ namespace MessagingInterfaces.Model
         public string Username { get; set; }
         [MaxLength(128)]
         public string ContactName { get; set; }
+        [MaxLength(128)]
+        public string ContactUsername { get; set; }
         public DateTime CreatedOn { get; set; }
     }
 }
