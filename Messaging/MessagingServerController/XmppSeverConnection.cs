@@ -14,6 +14,7 @@ using Matrix.Xmpp.Sasl;
 using Matrix.Xmpp.Session;
 using Matrix.Xmpp.Stream;
 using MessagingInterfaces.Model;
+using MessagingInterfaces.Repository;
 using SQLite;
 using Error = Matrix.Xmpp.Client.Error;
 using ErrorCondition = Matrix.Xmpp.Base.ErrorCondition;
@@ -39,6 +40,8 @@ namespace MessagingServerController
 
         private readonly XmppStreamParser streamParser;
         private bool InitialPresence;
+
+        private ContactRepository _contactRepository = new ContactRepository();
 
         // Jid binded to this connection
         public Jid Jid;
@@ -235,7 +238,7 @@ namespace MessagingServerController
                     a value of "from" or "both". 
                 */
 
-                var contacts = GetContacts(Jid.User);
+                var contacts = _contactRepository.GetContacts(Jid.User);
 
                 foreach (var contact in contacts)
                 {
@@ -307,7 +310,7 @@ namespace MessagingServerController
                     };
                     contacts.Add(contact);
                 }
-                SaveContacts(contacts);
+                _contactRepository.SaveContacts(contacts);
             }
             if (iq.Type == IqType.Get)
             {
@@ -319,30 +322,16 @@ namespace MessagingServerController
             Send(iq);
         }
 
-        private void SaveContacts(List<Contact> contacts)
-        {
-            using (var db = new SQLiteConnection(@"c:\temp\contacts.db"))
-            {
-                foreach(var contact in contacts)
-                    db.InsertOrReplace(contact);
-            }
-        }
 
 
-        private IEnumerable<Contact> GetContacts(string user)
-        {
-            using (var db = new SQLiteConnection(@"c:\temp\contacts.db"))
-            {
-                var contacts = db.Table<Contact>().Where(x => x.Username == user).ToList();
-                return contacts;
-            }
-        }
+
+
 
 
         private Iq GetRoster(Iq iq)
         {
             iq.Query = new Roster();
-            var contacts = GetContacts(Jid.User);
+            var contacts = _contactRepository.GetContacts(Jid.User);
             foreach (var contact in contacts)
             {
                 iq.Query.Add(new RosterItem
@@ -505,16 +494,9 @@ namespace MessagingServerController
             streamParser.OnStreamEnd += streamParser_OnStreamEnd;
             streamParser.OnStreamElement += streamParser_OnStreamElement;
 
-            InitializeDatabase();
         }
 
-        private void InitializeDatabase()
-        {
-            using (var db = new SQLiteConnection(@"c:\temp\contacts.db"))
-            {
-                db.CreateTable<Contact>();
-            }
-        }
+
 
         public XmppSeverConnection(Socket sock) : this()
         {
