@@ -12,10 +12,14 @@ namespace MessagingAPI.Controllers
     public class ContactController : ApiController
     {
         private ContactRepository _repository = new ContactRepository();
-        public IEnumerable<Contact> Get(string username)
+
+        [HttpGet]
+        public IEnumerable<Contact> Get(string id)
         {
-            return _repository.GetContacts(username);
+                return _repository.GetContacts(id);
         }
+
+        [HttpPost]
         public void Post([FromBody]Contact contact)
         {
             
