@@ -4,19 +4,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MessagingInterfaces.Model;
+using MessagingInterfaces.Repository;
 
 namespace MessagingServerController
 {
-    class ApiConnector
+    internal class ApiConnector
     {
-        public List<Contact> GetContacts(string username)
+        private readonly ContactRepository applicationRepository;
+
+        internal ApiConnector()
         {
-            throw new NotImplementedException();
+            applicationRepository= new ContactRepository();
+        }
+        public IEnumerable<Contact> GetContacts(string username)
+        {
+            try
+            {
+                return applicationRepository.GetContacts(username);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public void SaveContacts(List<Contact> contacts)
         {
-            throw new NotImplementedException();
+            try
+            {
+                applicationRepository.SaveContacts(contacts);
+            }
+            catch (Exception)
+            {
+               return;
+            }
         }
     }
 }
