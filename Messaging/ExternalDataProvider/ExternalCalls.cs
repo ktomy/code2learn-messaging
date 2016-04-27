@@ -9,6 +9,8 @@ namespace ExternalDataProvider
 {
     public class ExternalCalls
     {
+        public string Token { get; private set; }
+
         public async Task<string> GetAuthenticationToken(string userName, string password)
         {
             if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
@@ -45,12 +47,47 @@ namespace ExternalDataProvider
                         var accessToken = arrTokens[1].Split(',')[0].Replace("\"", "");
                         if (string.IsNullOrWhiteSpace(accessToken) == false)
                         {
+                            Token = accessToken;
                             return accessToken;
                         }
                     }
                 }
                 return string.Empty;
             }
+        }
+
+        public async Task<string> GetAccountInfo(string token, string accountName)
+        {
+            if (string.IsNullOrWhiteSpace(token) ||string.IsNullOrWhiteSpace(accountName))
+                throw new ArgumentNullException("token OR accountName is missing!");
+
+            HttpClientHandler httpClientHandler = new HttpClientHandler()
+            {
+                UseProxy = true,
+                UseDefaultCredentials = true,
+                Credentials = CredentialCache.DefaultCredentials
+            };
+
+            using (var client = new HttpClient(httpClientHandler))
+            {
+                var authURL = "http://10.21.218.47:8050/accounts-service/account/by-username";
+                var urlParams = String.Format("?username={0}", accountName);
+
+                client.BaseAddress = new Uri(authURL);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("Authorization", String.Format("Bearer {0}", token));
+
+                HttpResponseMessage response = await client.GetAsync(urlParams);
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = response.Content.ReadAsStringAsync().Result;
+                    if (string.IsNullOrWhiteSpace(json) == false)
+                        return json;
+                }
+            }
+
+            return string.Empty;
         }
 
         public async Task<bool> AccountExists(string accountName)
@@ -69,9 +106,6 @@ namespace ExternalDataProvider
             {
                 var authURL = "http://10.21.218.47:8050/accounts-service/account/check-username";
                 var urlParams = String.Format("?username={0}", accountName);
-
-                // Add a new Request Message
-                //HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, authURL);
 
                 client.BaseAddress = new Uri(authURL);
                 client.DefaultRequestHeaders.Accept.Clear();
