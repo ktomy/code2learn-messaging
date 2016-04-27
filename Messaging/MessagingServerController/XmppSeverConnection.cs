@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using ExternalDataProvider;
 using Matrix;
 using Matrix.Xml;
 using Matrix.Xmpp;
@@ -42,6 +43,8 @@ namespace MessagingServerController
 
         //private ContactRepository _contactRepository = new ContactRepository();
         private ApiConnector _api = new ApiConnector();
+
+        private ExternalCalls _engine = new ExternalCalls();
 
         // Jid binded to this connection
         public Jid Jid;
@@ -366,8 +369,11 @@ namespace MessagingServerController
                 pass = split[1];
             }
 
+            
+            var a =  _engine.GetAuthenticationToken(user, pass);
+            a.Wait();
 
-            if (true)
+            if (!string.IsNullOrWhiteSpace(_engine.Token))
             {
                 // pass correct
                 User = user;

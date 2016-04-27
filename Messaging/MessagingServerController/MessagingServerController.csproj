@@ -112,6 +112,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ExternalDataProvider\ExternalDataProvider.csproj">
+      <Project>{a83fd925-280c-4d91-8687-ec3670dbc525}</Project>
+      <Name>ExternalDataProvider</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MessagingInterfaces\MessagingInterfaces.csproj">
       <Project>{74352f8f-a594-421d-ad5f-f54d5011e6d8}</Project>
       <Name>MessagingInterfaces</Name>
