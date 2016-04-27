@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MessagingService", "src\MessagingService\MessagingService.xproj", "{3D52EA25-A4BE-4F6F-9803-279CFD398442}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingServerController", "MessagingServerController\MessagingServerController.csproj", "{74228AAE-979D-405E-831C-5E241029C00D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{3D8D6C1E-D754-4EDB-90F8-A95141E74CB6}"
@@ -23,6 +21,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingInterfaces", "MessagingInterfaces\MessagingInterfaces.csproj", "{74352F8F-A594-421D-AD5F-F54D5011E6D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExternalDataProvider", "ExternalDataProvider\ExternalDataProvider.csproj", "{A83FD925-280C-4D91-8687-EC3670DBC525}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingAPI", "MessagingAPI\MessagingAPI.csproj", "{AED04E04-0F66-4A5B-9A3F-A564FF29D405}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,5 +74,6 @@ Global
 		{C5013619-CF79-4237-9BC0-C743BE909353} = {D80B4700-97FD-49B5-8FD4-07ABC4E9FCF7}
 		{74352F8F-A594-421D-AD5F-F54D5011E6D8} = {3BA57693-5E45-4F1E-9488-AD7C14E84D06}
 		{A83FD925-280C-4D91-8687-EC3670DBC525} = {3BA57693-5E45-4F1E-9488-AD7C14E84D06}
+		{AED04E04-0F66-4A5B-9A3F-A564FF29D405} = {3D8D6C1E-D754-4EDB-90F8-A95141E74CB6}
 	EndGlobalSection
 EndGlobal

@@ -14,6 +14,7 @@ using Matrix.Xmpp.Sasl;
 using Matrix.Xmpp.Session;
 using Matrix.Xmpp.Stream;
 using MessagingInterfaces.Model;
+using MessagingInterfaces.Repository;
 using SQLite;
 using Error = Matrix.Xmpp.Client.Error;
 using ErrorCondition = Matrix.Xmpp.Base.ErrorCondition;
@@ -35,15 +36,17 @@ namespace MessagingServerController
     {
         private const int BUFFERSIZE = 1024;
         private readonly byte[] buffer = new byte[BUFFERSIZE];
+        private readonly Socket m_Sock;
+
+        private readonly XmppStreamParser streamParser;
         private bool InitialPresence;
+
+        private ContactRepository _contactRepository = new ContactRepository();
 
         // Jid binded to this connection
         public Jid Jid;
         private Presence LastPresence;
-        private readonly Socket m_Sock;
         private bool streamFooterSent;
-
-        private readonly XmppStreamParser streamParser;
 
         public void ReadCallback(IAsyncResult ar)
         {
@@ -200,18 +203,18 @@ namespace MessagingServerController
                         InitialPresence = true;
 
                         // request all initial presences of the contacts
-                        for (var i = 0; i < 11; i++)
-                        {
-                            // but not myself
-                            if (Jid.User.EndsWith(i.ToString()))
-                                continue;
+                        //for (var i = 0; i < 11; i++)
+                        //{
+                        //    // but not myself
+                        //    if (Jid.User.EndsWith(i.ToString()))
+                        //        continue;
 
-                            var jid = new Jid("user" + i + "@" + XmppDomain);
-                            var con =
-                                Global.ServerConnections.FirstOrDefault(sc => sc.Jid.Equals(jid, new BareJidComparer()));
-                            if (con != null && con.LastPresence != null)
-                                Send(con.LastPresence);
-                        }
+                        //    var jid = new Jid("user" + i + "@" + XmppDomain);
+                        //    var con =
+                        //        Global.ServerConnections.FirstOrDefault(sc => sc.Jid.Equals(jid, new BareJidComparer()));
+                        //    if (con != null && con.LastPresence != null)
+                        //        Send(con.LastPresence);
+                        //}
                     }
                 }
                 else if (pres.Type == PresenceType.Unavailable)
@@ -235,18 +238,27 @@ namespace MessagingServerController
                     a value of "from" or "both". 
                 */
 
+                var contacts = _contactRepository.GetContacts(Jid.User);
 
-                for (var i = 0; i < 11; i++)
+                foreach (var contact in contacts)
                 {
-                    // but not myself
-                    if (Jid.User.EndsWith(i.ToString()))
-                        continue;
-
-                    var jid = new Jid("user" + i + "@" + XmppDomain);
+                    var jid = new Jid(contact.ContactUsername + "@" + XmppDomain);
                     var con = Global.ServerConnections.FirstOrDefault(sc => sc.Jid.Equals(jid, new BareJidComparer()));
-                    if (con != null)
-                        con.Send(pres);
+                    con?.Send(pres);
                 }
+
+
+                //for (var i = 0; i < 11; i++)
+                //{
+                //    // but not myself
+                //    if (Jid.User.EndsWith(i.ToString()))
+                //        continue;
+
+                //    var jid = new Jid("user" + i + "@" + XmppDomain);
+                //    var con = Global.ServerConnections.FirstOrDefault(sc => sc.Jid.Equals(jid, new BareJidComparer()));
+                //    if (con != null)
+                //        con.Send(pres);
+                //}
 
                 // Send the presence to all my own connected resources (sessions)
                 Global.ServerConnections
@@ -283,52 +295,53 @@ namespace MessagingServerController
 
         private void ProcessRosterIq(Iq iq)
         {
+            if (iq.Type == IqType.Set)
+            {
+                var contacts = new List<Contact>();
+                var r = iq.Query as Roster;
+                foreach (var ri in r.GetRoster())
+                {
+                    var contact = new Contact
+                    {
+                        Username = Jid.User,
+                        ContactName = ri.Name,
+                        ContactUsername = ri.Jid.User,
+                        CreatedOn = DateTime.Now
+                    };
+                    contacts.Add(contact);
+                }
+                _contactRepository.SaveContacts(contacts);
+            }
             if (iq.Type == IqType.Get)
             {
-                // Send the roster
-                // we send a dummy roster here, you should retrieve it from a
-                // database or some kind of directory (LDAP, AD etc...)
-                iq.SwitchDirection();
-                iq.Type = IqType.Result;
-                //for (var i = 1; i < 11; i++)
-                //{
-                //    // don't add yourself to the contact list (aka roster)
-                //    if (Jid.User.EndsWith(i.ToString()))
-                //        continue;
+                GetRoster(iq);
 
-                //    var ri = new RosterItem
-                //    {
-                //        Jid = new Jid("user" + i + "@" + XmppDomain),
-                //        Name = "User " + i,
-                //        Subscription = Subscription.Both
-                //    };
-                //    ri.AddGroup("Group 1");
-                //    iq.Query.Add(ri);
-                //}
-
-                var contacts = GetContacts(Jid.User);
-                foreach (var contact in contacts)
-                {
-                    iq.Query.Add(new RosterItem
-                    {
-                        Jid = contact.Username + "@ceva",
-                        Name = contact.Username,
-                        Subscription = Subscription.Both,
-                    });
-                }
-
-
-                Send(iq);
             }
-            else if (iq.Type == IqType.Set)
-            {
-                // TODO, handle roster add, remove and update here.
-            }
+            iq.SwitchDirection();
+            iq.Type = IqType.Result;
+            Send(iq);
         }
 
-        private IEnumerable<Contact> GetContacts(string user)
+
+
+
+
+
+
+        private Iq GetRoster(Iq iq)
         {
-            return new List<Contact>();
+            iq.Query = new Roster();
+            var contacts = _contactRepository.GetContacts(Jid.User);
+            foreach (var contact in contacts)
+            {
+                iq.Query.Add(new RosterItem
+                {
+                    Jid = contact.ContactUsername + "@" + XmppDomain,
+                    Name = contact.ContactName,
+                    Subscription = Subscription.Both
+                });
+            }
+            return iq;
         }
 
         private void ProcessSaslPlainAuth(MxAuth auth)
@@ -481,18 +494,9 @@ namespace MessagingServerController
             streamParser.OnStreamEnd += streamParser_OnStreamEnd;
             streamParser.OnStreamElement += streamParser_OnStreamElement;
 
-            InitializeDatabase();
-
-
         }
 
-        private void InitializeDatabase()
-        {
-            using (var db = new SQLiteConnection(@"c:\temp\contacts.db"))
-            {
-                db.CreateTable<Contact>();
-            }
-        }
+
 
         public XmppSeverConnection(Socket sock) : this()
         {
