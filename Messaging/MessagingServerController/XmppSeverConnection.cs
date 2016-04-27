@@ -15,7 +15,6 @@ using Matrix.Xmpp.Session;
 using Matrix.Xmpp.Stream;
 using MessagingInterfaces.Model;
 using MessagingInterfaces.Repository;
-using SQLite;
 using Error = Matrix.Xmpp.Client.Error;
 using ErrorCondition = Matrix.Xmpp.Base.ErrorCondition;
 using EventArgs = Matrix.EventArgs;
@@ -41,7 +40,8 @@ namespace MessagingServerController
         private readonly XmppStreamParser streamParser;
         private bool InitialPresence;
 
-        private ContactRepository _contactRepository = new ContactRepository();
+        //private ContactRepository _contactRepository = new ContactRepository();
+        private ApiConnector _api = new ApiConnector();
 
         // Jid binded to this connection
         public Jid Jid;
@@ -238,7 +238,7 @@ namespace MessagingServerController
                     a value of "from" or "both". 
                 */
 
-                var contacts = _contactRepository.GetContacts(Jid.User);
+                var contacts = _api.GetContacts(Jid.User);
 
                 foreach (var contact in contacts)
                 {
@@ -310,7 +310,7 @@ namespace MessagingServerController
                     };
                     contacts.Add(contact);
                 }
-                _contactRepository.SaveContacts(contacts);
+                _api.SaveContacts(contacts);
             }
             if (iq.Type == IqType.Get)
             {
@@ -331,7 +331,7 @@ namespace MessagingServerController
         private Iq GetRoster(Iq iq)
         {
             iq.Query = new Roster();
-            var contacts = _contactRepository.GetContacts(Jid.User);
+            var contacts = _api.GetContacts(Jid.User);
             foreach (var contact in contacts)
             {
                 iq.Query.Add(new RosterItem
